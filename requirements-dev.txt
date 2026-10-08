@@ -1,13 +1,13 @@
 -r requirements.txt
 pytest==9.1.1
-pytest-cov>=6.0,<8.0
-pytest-xdist>=3.6,<4.0
-ruff>=0.12,<1.0
-mypy>=1.15,<2.0
+pytest-cov>=7.1.0,<8.0
+pytest-xdist>=3.8.0,<4.0
+ruff>=0.16.10,<1.0
+mypy>=2.4.0,<3.0
 jsonschema>=4.23,<5.0
-robotframework==7.4.2
+robotframework==7.5
 robotframework-requests==0.9.7
-playwright==1.62.0
+playwright==1.63.0
 pip-audit>=2.7,<3.0
 bandit>=1.8,<2.0
 PyYAML>=6.0,<7.0
