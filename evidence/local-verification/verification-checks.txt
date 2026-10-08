@@ -1,0 +1,20 @@
+Repository verification checks
+==============================
+Date (UTC): 2026-09-02
+
+PASS  Repository content validator
+PASS  Python source compilation
+PASS  Unit, component, contract, and security suite: 52 tests
+PASS  Live multi-process integration suite: 5 tests
+PASS  Configured branch-aware coverage gate: 88.47% (minimum 75%)
+PASS  JSON and YAML parse checks
+PASS  XML parsing and XML Schema compilation
+PASS  Bash syntax checks
+PASS  JavaScript syntax checks
+PASS  Relative Markdown link resolution
+PASS  Requirements traceability: 25 requirements and 37 manual case references
+PASS  Referenced automated test names resolve to executable tests
+PASS  Machine-specific path scan
+PASS  Repository content and URL hygiene scan
+
+See environment.txt for the tool-specific packs that remain CI-controlled.

@@ -1,0 +1,64 @@
+[project]
+name = "relayhub-quality-engineering"
+version = "1.0.0"
+description = "Quality engineering portfolio for a distributed message relay platform"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Razvan Craciunescu"}]
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = [
+  "unit: isolated logic and repository tests",
+  "component: service tests using in-process HTTP clients",
+  "contract: API and schema compatibility tests",
+  "security: secure handling and abuse-case tests",
+  "integration: tests requiring a running multi-service environment",
+  "ui: Playwright browser tests requiring a running environment"
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+omit = ["app/worker/main.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 75
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError"
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["artifacts", "evidence", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+exclude = ["tests/ui", "scripts"]
+plugins = ["sqlalchemy.ext.mypy.plugin"]
+
+[[tool.mypy.overrides]]
+module = ["defusedxml.*", "jsonschema.*"]
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]

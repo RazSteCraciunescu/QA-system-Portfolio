@@ -1,0 +1,30 @@
+INFO:     Started server process [4948]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18083 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33274 - "GET /health/ready HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33278 - "DELETE /__admin/state HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:33278 - "GET /__admin/messages/MSG-20260902-5517398C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33292 - "DELETE /__admin/state HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:33292 - "GET /__admin/messages/MSG-20260902-9A5563F0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33306 - "DELETE /__admin/state HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:33306 - "POST /__admin/scenarios HTTP/1.1" 204 No Content
+{"timestamp": "2026-09-02T06:22:36.729787+00:00", "level": "WARNING", "logger": "relayhub.partner_mock", "message": "partner_simulated_failure", "message_id": "MSG-20260902-875F9245", "status": "503", "event": "partner_simulated_failure"}
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 503 Service Unavailable
+{"timestamp": "2026-09-02T06:22:36.752173+00:00", "level": "WARNING", "logger": "relayhub.partner_mock", "message": "partner_simulated_failure", "message_id": "MSG-20260902-875F9245", "status": "502", "event": "partner_simulated_failure"}
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 502 Bad Gateway
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:33306 - "GET /__admin/messages/MSG-20260902-875F9245 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48812 - "DELETE /__admin/state HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:48812 - "POST /__admin/scenarios HTTP/1.1" 204 No Content
+{"timestamp": "2026-09-02T06:22:36.957121+00:00", "level": "WARNING", "logger": "relayhub.partner_mock", "message": "partner_simulated_failure", "message_id": "MSG-20260902-B2A8986D", "status": "400", "event": "partner_simulated_failure"}
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:48812 - "GET /__admin/messages/MSG-20260902-B2A8986D HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48822 - "DELETE /__admin/state HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:33288 - "POST /partner/v1/messages HTTP/1.1" 202 Accepted
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4948]

@@ -1,0 +1,134 @@
+name: relayhub-qa-lab
+
+x-app-common: &app-common
+  build:
+    context: .
+  image: relayhub-qa-lab:local
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  networks:
+    - relay-net
+  environment: &app-environment
+    APP_ENV: test
+    DATABASE_URL: postgresql+psycopg://relayhub:relayhub-local@postgres:5432/relayhub
+    TRANSFORMER_URL: http://transformer:8082
+    PARTNER_URL: http://partner-mock:8083
+    PARTNER_ADMIN_TOKEN: ${PARTNER_ADMIN_TOKEN:-local-test-token}
+    WORKER_POLL_SECONDS: 0.20
+    WORKER_MAX_ATTEMPTS: 3
+    WORKER_RETRY_DELAY_SECONDS: 0.25
+    OUTBOUND_TIMEOUT_SECONDS: 3.0
+    MAX_PAYLOAD_BYTES: 102400
+    LOG_LEVEL: INFO
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: relayhub
+      POSTGRES_USER: relayhub
+      POSTGRES_PASSWORD: relayhub-local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relayhub -d relayhub"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - relayhub-postgres:/var/lib/postgresql/data
+    networks:
+      - relay-net
+
+  gateway:
+    <<: *app-common
+    command: ["python", "-m", "uvicorn", "app.gateway.main:app", "--host", "0.0.0.0", "--port", "8080"]
+    environment:
+      <<: *app-environment
+      GATEWAY_BASE_URL: http://gateway:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/ready', timeout=2)"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    <<: *app-common
+    command: ["python", "-m", "app.worker.main"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      transformer:
+        condition: service_healthy
+      partner-mock:
+        condition: service_healthy
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "from pathlib import Path; import time; p=Path('/tmp/relayhub-worker-heartbeat'); raise SystemExit(0 if p.exists() and time.time()-float(p.read_text()) < 10 else 1)"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  transformer:
+    <<: *app-common
+    command: ["python", "-m", "uvicorn", "app.transformer.main:app", "--host", "0.0.0.0", "--port", "8082"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8082:8082"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8082/health/ready', timeout=2)"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  partner-mock:
+    <<: *app-common
+    command: ["python", "-m", "uvicorn", "app.partner_mock.main:app", "--host", "0.0.0.0", "--port", "8083"]
+    ports:
+      - "127.0.0.1:8083:8083"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8083/health/ready', timeout=2)"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+networks:
+  relay-net:
+    driver: bridge
+
+volumes:
+  relayhub-postgres:

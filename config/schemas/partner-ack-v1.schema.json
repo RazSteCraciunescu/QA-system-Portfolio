@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/relayhub/partner-ack-v1.schema.json",
+  "title": "Partner acknowledgement v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ackId", "messageId", "status"],
+  "properties": {
+    "ackId": {"type": "string", "pattern": "^ACK-[A-Z0-9]{16}$"},
+    "messageId": {"type": "string"},
+    "status": {"const": "ACCEPTED"}
+  }
+}

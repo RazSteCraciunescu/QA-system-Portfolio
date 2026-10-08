@@ -1,0 +1,15 @@
+{
+  "message_id": "MSG-20260902-A17F",
+  "schema_version": "1.0",
+  "source_system": "OPS_A",
+  "target_system": "PARTNER_B",
+  "priority": "HIGH",
+  "data_sensitivity": "CONTROLLED",
+  "payload_format": "JSON",
+  "payload": {
+    "event": "status-update",
+    "unit": "alpha-7",
+    "location": {"x": 41.2, "y": 23.9},
+    "internal_note": "must not be forwarded"
+  }
+}

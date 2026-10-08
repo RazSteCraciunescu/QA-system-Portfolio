@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+!evidence/local-verification/coverage.xml
+htmlcov/
+.venv/
+
+# Runtime data
+*.db
+*.sqlite
+*.sqlite3
+.env
+logs/
+!evidence/local-verification/logs/
+!evidence/local-verification/logs/**
+
+# Test evidence generated locally
+artifacts/*
+!artifacts/.gitkeep
+playwright-report/
+test-results/
+robot-results/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local containers
+postgres-data/

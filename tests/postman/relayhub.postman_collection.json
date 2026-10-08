@@ -1,0 +1,133 @@
+{
+  "info": {
+    "_postman_id": "24428fa6-3439-4e69-af0b-50cf03072a97",
+    "name": "RelayHub API Regression",
+    "description": "API checks for health, request validation, idempotency, filtering, and error handling.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "message_id", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "01 - Gateway readiness",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {"raw": "{{base_url}}/health/ready", "host": ["{{base_url}}"], "path": ["health", "ready"]}
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": [
+          "pm.test('Gateway is ready', () => pm.response.to.have.status(200));",
+          "pm.test('Database dependency is up', () => pm.expect(pm.response.json().dependencies.database).to.eql('UP'));"
+        ]}
+      }]
+    },
+    {
+      "name": "02 - Submit valid JSON message",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {"exec": [
+            "const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');",
+            "const suffix = Math.random().toString(36).slice(2, 10).toUpperCase();",
+            "pm.collectionVariables.set('message_id', `MSG-${date}-${suffix}`);"
+          ]}
+        },
+        {
+          "listen": "test",
+          "script": {"exec": [
+            "pm.test('Message accepted', () => pm.response.to.have.status(202));",
+            "const body = pm.response.json();",
+            "pm.test('Message ID is echoed', () => pm.expect(body.message_id).to.eql(pm.collectionVariables.get('message_id')));",
+            "pm.test('Correlation ID is present', () => pm.expect(pm.response.headers.get('X-Correlation-ID')).to.match(/^[0-9a-f-]{36}$/));"
+          ]}
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message_id\": \"{{message_id}}\",\n  \"schema_version\": \"1.0\",\n  \"source_system\": \"POSTMAN_CLIENT\",\n  \"target_system\": \"PARTNER_B\",\n  \"priority\": \"HIGH\",\n  \"data_sensitivity\": \"CONTROLLED\",\n  \"payload_format\": \"JSON\",\n  \"payload\": {\n    \"event\": \"postman-regression\",\n    \"internal_note\": \"remove before delivery\"\n  }\n}"
+        },
+        "url": {"raw": "{{base_url}}/api/v1/transmissions", "host": ["{{base_url}}"], "path": ["api", "v1", "transmissions"]}
+      }
+    },
+    {
+      "name": "03 - Read submitted message",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {"raw": "{{base_url}}/api/v1/transmissions/{{message_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "transmissions", "{{message_id}}"]}
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": [
+          "pm.test('Message can be retrieved', () => pm.response.to.have.status(200));",
+          "pm.test('Status is known', () => pm.expect(['QUEUED','PROCESSING','DELIVERED']).to.include(pm.response.json().status));",
+          "pm.test('Raw payload is not exposed', () => pm.expect(pm.response.json()).not.to.have.property('payload'));"
+        ]}
+      }]
+    },
+    {
+      "name": "04 - Duplicate message conflict",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message_id\": \"{{message_id}}\",\n  \"schema_version\": \"1.0\",\n  \"source_system\": \"POSTMAN_CLIENT\",\n  \"target_system\": \"PARTNER_B\",\n  \"priority\": \"HIGH\",\n  \"data_sensitivity\": \"CONTROLLED\",\n  \"payload_format\": \"JSON\",\n  \"payload\": {\"event\": \"duplicate-check\"}\n}"
+        },
+        "url": {"raw": "{{base_url}}/api/v1/transmissions", "host": ["{{base_url}}"], "path": ["api", "v1", "transmissions"]}
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": [
+          "pm.test('Duplicate is rejected', () => pm.response.to.have.status(409));",
+          "pm.test('Stable error code returned', () => pm.expect(pm.response.json().error.code).to.eql('DUPLICATE_MESSAGE_ID'));"
+        ]}
+      }]
+    },
+    {
+      "name": "05 - Unsupported schema version",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message_id\": \"MSG-20260902-BAD1\",\n  \"schema_version\": \"2.0\",\n  \"source_system\": \"POSTMAN_CLIENT\",\n  \"target_system\": \"PARTNER_B\",\n  \"priority\": \"NORMAL\",\n  \"data_sensitivity\": \"PUBLIC\",\n  \"payload_format\": \"JSON\",\n  \"payload\": {\"event\": \"invalid-version\"}\n}"
+        },
+        "url": {"raw": "{{base_url}}/api/v1/transmissions", "host": ["{{base_url}}"], "path": ["api", "v1", "transmissions"]}
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": [
+          "pm.test('Unsupported version is rejected', () => pm.response.to.have.status(422));",
+          "pm.test('Validation detail is available', () => pm.expect(pm.response.json().error.details).to.be.an('array').that.is.not.empty);"
+        ]}
+      }]
+    },
+    {
+      "name": "06 - Filter by source system",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/transmissions?source_system=postman_client",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "transmissions"],
+          "query": [{"key": "source_system", "value": "postman_client"}]
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {"exec": [
+          "pm.test('Filter request succeeds', () => pm.response.to.have.status(200));",
+          "pm.test('All returned records match', () => pm.response.json().items.forEach(item => pm.expect(item.source_system).to.eql('POSTMAN_CLIENT')));"
+        ]}
+      }]
+    }
+  ]
+}

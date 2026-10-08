@@ -1,0 +1,10 @@
+{
+  "message_id": "MSG-20260902-B81C",
+  "schema_version": "1.0",
+  "source_system": "OPS_A",
+  "target_system": "PARTNER_B",
+  "priority": "NORMAL",
+  "data_sensitivity": "PUBLIC",
+  "payload_format": "XML",
+  "payload": "<message><event>status-update</event><unit>bravo-2</unit><location><x>12.4</x><y>8.1</y></location><internal_note>remove me</internal_note></message>"
+}

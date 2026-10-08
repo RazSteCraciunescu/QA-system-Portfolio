@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/relayhub/transmission-v1.schema.json",
+  "title": "RelayHub transmission request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "message_id",
+    "schema_version",
+    "source_system",
+    "target_system",
+    "priority",
+    "data_sensitivity",
+    "payload_format",
+    "payload"
+  ],
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "pattern": "^MSG-[0-9]{8}-[A-Z0-9]{4,12}$"
+    },
+    "schema_version": {"const": "1.0"},
+    "source_system": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 30,
+      "pattern": "^[A-Z][A-Z0-9_-]+$"
+    },
+    "target_system": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 30,
+      "pattern": "^[A-Z][A-Z0-9_-]+$"
+    },
+    "priority": {"enum": ["LOW", "NORMAL", "HIGH", "CRITICAL"]},
+    "data_sensitivity": {"enum": ["PUBLIC", "CONTROLLED"]},
+    "payload_format": {"enum": ["JSON", "XML"]},
+    "payload": {
+      "oneOf": [
+        {"type": "object"},
+        {"type": "string"}
+      ]
+    }
+  }
+}

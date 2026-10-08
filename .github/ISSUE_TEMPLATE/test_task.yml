@@ -1,0 +1,31 @@
+name: Test task
+description: Plan analysis, design, execution, or automation work
+title: "[TEST] "
+labels: [testing]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the risk or requirement this work addresses.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and exclusions
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Proposed approach
+      description: Include data, environment, automation layer, and evidence to retain.
+    validations:
+      required: true
+  - type: textarea
+    id: completion
+    attributes:
+      label: Completion criteria
+    validations:
+      required: true

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RelayHub QA Console</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Distributed test environment</p>
+      <h1>RelayHub QA Console</h1>
+      <p class="subtitle">Submit a synthetic message and follow its delivery state.</p>
+    </div>
+    <div id="health" class="health pending">Checking gateway</div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>New transmission</h2>
+      <form id="transmission-form">
+        <div class="grid">
+          <label>Message ID
+            <input id="message-id" name="message_id" required>
+          </label>
+          <label>Priority
+            <select id="priority" name="priority">
+              <option>NORMAL</option>
+              <option>HIGH</option>
+              <option>CRITICAL</option>
+              <option>LOW</option>
+            </select>
+          </label>
+          <label>Source system
+            <input id="source-system" name="source_system" value="OPS_A" required>
+          </label>
+          <label>Target system
+            <input id="target-system" name="target_system" value="PARTNER_B" required>
+          </label>
+        </div>
+        <label>JSON payload
+          <textarea id="payload" rows="7">{
+  "event": "status-update",
+  "unit": "alpha-7",
+  "coordinates": {"x": 41.2, "y": 23.9},
+  "internal_note": "filtered before delivery"
+}</textarea>
+        </label>
+        <button type="submit">Queue transmission</button>
+      </form>
+      <p id="form-result" class="result" role="status"></p>
+    </section>
+
+    <section class="panel wide">
+      <div class="section-heading">
+        <div>
+          <h2>Recent transmissions</h2>
+          <p>Auto-refreshes every two seconds.</p>
+        </div>
+        <button id="refresh" class="secondary" type="button">Refresh now</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Message</th>
+              <th>Route</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Attempts</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="transmission-rows">
+            <tr><td colspan="6">No transmissions loaded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Synthetic data only. API documentation: <a href="/docs">OpenAPI UI</a>
+  </footer>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

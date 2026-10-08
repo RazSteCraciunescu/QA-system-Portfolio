@@ -1,0 +1,1 @@
+"""partner mock service."""

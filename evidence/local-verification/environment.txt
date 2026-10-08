@@ -1,0 +1,26 @@
+Local verification environment
+==============================
+Date (UTC): 2026-09-02
+Operating system: Linux
+Python: 3.13.5
+
+Installed packages used by the executed suites:
+- fastapi==0.128.2
+- uvicorn==0.48.0
+- SQLAlchemy==2.0.50
+- httpx==0.28.1
+- defusedxml==0.7.1
+- pytest==9.0.2
+- pytest-cov==7.0.0
+- pydantic==2.13.4
+- jsonschema==4.26.0
+- playwright==1.57.0
+
+Environment-specific packs not executed on this host:
+- PostgreSQL Docker Compose integration (Docker Engine unavailable)
+- Robot Framework and Newman acceptance packs (runners unavailable)
+- Playwright browser smoke (browser binary unavailable)
+- Bandit and pip-audit static checks (runners unavailable)
+- Trivy image scan, k6, and OWASP ZAP checks (container runtime unavailable)
+
+The CI workflows install the pinned project dependencies and own those gates.

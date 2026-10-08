@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/relayhub/partner-message-v1.schema.json",
+  "title": "Partner normalized message v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "messageId",
+    "origin",
+    "destination",
+    "priority",
+    "dataSensitivity",
+    "content",
+    "filteredFields"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "messageId": {"type": "string"},
+    "origin": {"type": "string"},
+    "destination": {"type": "string"},
+    "priority": {"enum": ["LOW", "NORMAL", "HIGH", "CRITICAL"]},
+    "dataSensitivity": {"enum": ["PUBLIC", "CONTROLLED"]},
+    "content": {"type": "object"},
+    "filteredFields": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    }
+  }
+}

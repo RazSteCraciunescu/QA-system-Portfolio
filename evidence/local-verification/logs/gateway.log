@@ -1,0 +1,26 @@
+INFO:     Started server process [4949]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18080 (Press CTRL+C to quit)
+INFO:     127.0.0.1:34918 - "GET /health/ready HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34920 - "POST /api/v1/transmissions HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:34920 - "GET /api/v1/transmissions/MSG-20260902-5517398C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34920 - "GET /api/v1/transmissions/MSG-20260902-5517398C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34920 - "GET /api/v1/transmissions/MSG-20260902-5517398C/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34928 - "POST /api/v1/transmissions HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:34928 - "GET /api/v1/transmissions/MSG-20260902-9A5563F0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34928 - "GET /api/v1/transmissions/MSG-20260902-9A5563F0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34940 - "POST /api/v1/transmissions HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:34940 - "GET /api/v1/transmissions/MSG-20260902-875F9245 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34940 - "GET /api/v1/transmissions/MSG-20260902-875F9245 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59580 - "POST /api/v1/transmissions HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59580 - "GET /api/v1/transmissions/MSG-20260902-B2A8986D HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59580 - "GET /api/v1/transmissions/MSG-20260902-B2A8986D HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59586 - "POST /api/v1/transmissions HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59586 - "GET /api/v1/transmissions/MSG-20260902-252FD6A3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59586 - "GET /api/v1/transmissions/MSG-20260902-252FD6A3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59586 - "GET /api/v1/transmissions?source_system=field_node_7&priority=CRITICAL HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4949]

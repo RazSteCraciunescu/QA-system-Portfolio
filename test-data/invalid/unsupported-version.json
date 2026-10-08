@@ -1,0 +1,10 @@
+{
+  "message_id": "MSG-20260902-C92D",
+  "schema_version": "2.0",
+  "source_system": "OPS_A",
+  "target_system": "PARTNER_B",
+  "priority": "NORMAL",
+  "data_sensitivity": "PUBLIC",
+  "payload_format": "JSON",
+  "payload": {"event": "status-update"}
+}
